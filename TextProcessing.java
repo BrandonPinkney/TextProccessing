@@ -25,12 +25,24 @@ public class TextProcessing {
         List<String> tokens = tokenizetheText(file);
         Set<String> findStopwords = findAllStopWords(file2);
         Map<String, Integer> frequency = frequencyOfEachWord(file3);
+        int sizeOfDataSet = sizeOfDataset(file);
+        int puncuation = numberOfPunctuation(file);
+        int stopWords = numberOfStopWords(file2);
+        int words = numberOfWords(file);
+        String longestWord = findLongestWord(file2);
         List<Map.Entry<String, Integer>> t = findTopNnumbers(frequency);
         getAllandRemoveStopWords(file2, findStopwords);
         writeTheContentsOut(tokens, "output1.txt");
         writeTheFrequencyOut(frequency, "output3.txt");
         writeTheTopNOut(t, "output4.txt");
 
+        // quick task 4 data in terminal
+
+        System.out.println(sizeOfDataSet);
+        System.out.println(puncuation);
+        System.out.println(stopWords);
+        System.out.println(words);
+        System.out.print(longestWord);
     }
 
     // Preprocessing
@@ -256,7 +268,7 @@ public class TextProcessing {
 
     // Task 4
 
-    public static Map<String, Integer> sizeOfDataset(File file) {
+    public static int sizeOfDataset(File file) {
         HashMap<String, Integer> t = new HashMap<>();
         BufferedReader br = null;
 
@@ -286,7 +298,7 @@ public class TextProcessing {
                 ex.printStackTrace();
             }
         }
-        return t;
+        return t.size();
     }
 
     public static int numberOfWords(File file) {
@@ -322,7 +334,7 @@ public class TextProcessing {
         return counter;
     }
 
-    public static Map<String, Integer> numberOfStopWords(File file) {
+    public static int numberOfStopWords(File file) {
         HashMap<String, Integer> t = new HashMap<>();
         BufferedReader br = null;
 
@@ -352,7 +364,7 @@ public class TextProcessing {
                 ex.printStackTrace();
             }
         }
-        return t;
+        return t.size();
     }
 
     public static int numberOfPunctuation(File file) {
@@ -383,5 +395,33 @@ public class TextProcessing {
         }
 
         return counter;
+    }
+
+    // finds the longest word from stopwords file
+    public static String findLongestWord(File file) {
+        String longestWord = "";
+        BufferedReader br = null;
+        String[] wordz = null;
+
+        try {
+            String information;
+            br = new BufferedReader(new FileReader(file));
+
+            while ((information = br.readLine()) != null) {
+                wordz = information.split("\\s+");
+                for (String word : wordz) {
+                    word = word.replaceAll("\\p{Punct}", " ");
+                    while (word.length() > longestWord.length()) {
+                        longestWord = word;
+                    }
+                }
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+
+        return longestWord;
     }
 }
